@@ -7,6 +7,12 @@ class AES_decrypt:
     class Meta:
         ''' Giai mã AES-128 với các khóa 128,192,256'''
     def file_decrypt(file_XauMa,file_XauRo,KeyCharacter,Key):
+        # if Key =="128":
+        #     total_key = 32
+        # elif Key =="192":
+        #     total_key = 24*2
+        # elif Key == "256":
+        #     total_key = 32*2
         f = open(file_XauMa,mode = 'r',encoding = 'utf-8')
         KeyCharacter = aes.no_accent_vietnamese(KeyCharacter)
         data = f.readlines()
@@ -18,9 +24,16 @@ class AES_decrypt:
         # print(PlainVersion)
         wf = open(file_XauRo,mode = 'w',encoding = 'utf-8') 
         for i in range(len(PlainVersion)):
-            data = AES_decrypt.decrypt(PlainVersion[i],KeyCharacter,Key)
-            wf.write(data)
-            wf.write("\n")
+
+            if len(PlainVersion[i]) > 32:
+                for j in range(0,len(PlainVersion[i]),32):
+                    data = AES_decrypt.decrypt(PlainVersion[i][j:j+32],KeyCharacter,Key)
+                    wf.write(data)
+                wf.write("\n")
+            else:
+                data = AES_decrypt.decrypt(PlainVersion[i],KeyCharacter,Key)
+                wf.write(data)
+                wf.write("\n")
         wf.close()
         return "data encrypt done"
 
@@ -104,8 +117,14 @@ class AES_decrypt:
         # print(hex_addroundkey)
         # data1 = BitVector(hexstring=hex_addroundkey)
         output = aes.inv_formatText(hex_addroundkey)
-        New_output = output.strip('00')
-        PlainVersion = BitVector(hexstring=New_output)
+        hex_to_ascii = ''
+        for i in range(0,len(output),2):
+            if output[i:i+2] == "00":
+                pass
+            else:
+                hex_to_ascii = hex_to_ascii + output[i:i+2]
+        # print(New_output)
+        PlainVersion = BitVector(hexstring=hex_to_ascii)
         PlainVersion = PlainVersion.get_bitvector_in_ascii()
         return PlainVersion
 

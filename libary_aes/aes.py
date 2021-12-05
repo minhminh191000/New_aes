@@ -160,6 +160,9 @@ def shiftrow(str_hex):
     # 00112233 44556677 8899AABB CCDDEEFF
 #=========================findroudkey=============================
 def findroundkey(temp1,case):
+    Rcon = ["01000000", '02000000','04000000','08000000','10000000','20000000',
+            '40000000','80000000','1b000000','36000000','6C000000','D8000000','AB000000','4D000000']
+    # if key == "128":
     w0=temp1[0:8]
     w1=temp1[8:16]
     w2=temp1[16:24]
@@ -167,8 +170,6 @@ def findroundkey(temp1,case):
     temp2=temp1[24:32]
     temp2=shiftrow(temp2)
     temp2=subbyte(temp2)
-    Rcon = ["01000000", '02000000','04000000','08000000','10000000','20000000',
-            '40000000','80000000','1b000000','36000000','6C000000','D8000000','AB000000','4D000000']
     temp2=xor(temp2,Rcon[case])
     w4=xor(w0, temp2)
     w5=xor(w1, w4)
@@ -226,13 +227,13 @@ def inv_shifrow(hex_str):
         result = hex_str[6:8] + hex_str[0:2] + hex_str[2:4] + hex_str[4:6]
         return result
     else:
-        # Hang 1 giu nguyen 0 5 10 15
+        # Dữ Nguyên
         result = hex_str[0:2] + hex_str[26:28] + hex_str[20:22] + hex_str[14:16]
-        # Hang 2 dich 1 byte 4 9 14 3
+        # Dịch 1
         result = result + hex_str[8:10] + hex_str[2:4] + hex_str[28:30] + hex_str[22:24]
-        # Hang 3 dich 2 byte 8 13 2 7
+        # Dịch 2 
         result = result + hex_str[16:18] + hex_str[10:12] + hex_str[4:6] + hex_str[30:32]
-        # Hang 4 dich 3 byte 12 1 6 11
+        # Dịch 3
         result = result + hex_str[24:26] + hex_str[18:20] + hex_str[12:14] + hex_str[6:8]
         return result
         # return invshiftrow(hex_str)
@@ -380,8 +381,8 @@ def invmixcolumn(bv3):
 # hàm dùng để sử lý            
 def edit_text(data,key):
     # print(data)
-    if len(data) < key:
-        ListData = key - len(data)
+    if len(data) < 16:
+        ListData = 16 - len(data)
         # print("Khóa Không đủ sẽ thực hiện thêm 0 vào cuối ")
         data = text_in_hex(data)
         # print(data)
@@ -389,9 +390,9 @@ def edit_text(data,key):
             data = data + "00"
         # print(data)
         return data
-    elif len(data) > key:
+    elif len(data) > 16:
         # print("Khóa Thừa sẽ thực hiện cắt")
-        data = data[:key]
+        data = data[:16]
         data = text_in_hex(data)
         return data
     data = text_in_hex(data)
@@ -436,4 +437,31 @@ def no_accent_vietnamese(s):
 
 
             
+# def expand_key(self, cipher_key):
+#         r_con = ['01000000', '02000000', '04000000', '08000000', '10000000',
+#                  '20000000', '40000000', '80000000', '1b000000', '36000000',
+#                  '6c000000', 'd8000000', 'ab000000', '4d000000']
+#         max_word = (self.rounds + 1) * 4
+#         for n_w in range(self.cipher_word, max_word, 4):
+#             n_bit = n_w * 8
+#             # 1 word 8 bit hex
+#             before = cipher_key[n_bit - 8: n_bit]
 
+#             # Rotate word
+#             before = self.shift_rows(before)
+
+#             # sub bytes
+#             before = self.sub_bytes(before)
+
+#             # xor rcon
+#             before = self.xor(before, r_con[math.ceil(n_w / 4) - 1])
+
+#             for i in range(32, 0, -8):
+#                 w = cipher_key[n_bit - i: n_bit - i + 8]
+#                 w4 = self.xor(w, before)
+#                 before = w4
+#                 cipher_key = cipher_key + w4
+#         round_key = []
+#         for i in range(self.rounds + 1):
+#             round_key.append(cipher_key[i * 32: (i + 1) * 32])
+#         return round_key

@@ -17,19 +17,23 @@ class AES_encrypt():
             text = data[i]
             text = text.strip('\n')
             PlainVersion.append(text)
-        # print(PlainVersion)
         wf = open(file_XauMa,mode = 'w',encoding = 'utf-8') 
         for i in range(len(PlainVersion)):
-            data = AES_encrypt.encrypt(PlainVersion[i],KeyCharacter,Key)
-            wf.write(data)
-            wf.write("\n")
+            if len(PlainVersion[i]) > 16:
+                for j in range(0,len(PlainVersion[i]),16):
+                    data = AES_encrypt.encrypt(PlainVersion[i][j:j+16],KeyCharacter,Key)
+                    wf.write(data)
+                wf.write("\n")
+            else: 
+                data = AES_encrypt.encrypt(PlainVersion[i],KeyCharacter,Key)
+                wf.write(data)
+                wf.write("\n")
         wf.close()
         return "data encrypt done"
             
         
 
     def encrypt(PlainVersion,KeyCharacter,Key):
-        # KeyCharacter = "MINHTRCUSICNERTK"
         print("Mã hóa thông tin aes - Minh - (Migor)")
         try :
             if Key == "128":
@@ -56,7 +60,7 @@ class AES_encrypt():
         for i in range(loop - 1):
             roundkey = aes.findroundkey(roundkeys[i],i+1)
             roundkeys.append(roundkey)
-
+        # print(roundkeys)
         # print("=========== đã vào đến đây===========")
         # print(KeyCharacter)
         bv1 = BitVector(hexstring=text)

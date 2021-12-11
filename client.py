@@ -84,14 +84,14 @@ class App(tk.Tk):
         cipher_text.delete(1.0, END)
         key = selected
         KeyCharacter = public_key.get("1.0", "end")
-        print("đã vào")
+        # print("đã vào")
         AES_encrypt.file_encrypt('libary_aes/XauRo.txt','libary_aes/XauMa.txt',KeyCharacter,key)
         f = open('libary_aes/XauMa.txt',mode = 'r',encoding = 'utf-8')
         message = f.read()
         cipher_text.insert("end",message)
         messagebox.showinfo(title="client",message="Encode Done")
     def send_file(event):
-        messagebox.showinfo(title="client",message="Send Cipher Text")
+        # messagebox.showinfo(title="client",message="Send Cipher Text")
         host = socket.gethostname()  # as both code is running on same pc
         port = 8080  # socket server port number
         client_socket = socket.socket()  # instantiate
@@ -117,21 +117,6 @@ def read_file():
     pass
 
 def client_program():
-    # host = socket.gethostname()  # as both code is running on same pc
-    # port = 8080  # socket server port number
-
-    # client_socket = socket.socket()  # instantiate
-    # client_socket.connect((host, port))  # connect to the server
-    # f = open('libary_aes/XauMa.txt',mode = 'r',encoding = 'utf-8')
-    # message = f.read()
-    # # while message.lower().strip() != 'bye':
-    # client_socket.send(message.encode())  # send message
-    # data = client_socket.recv(1024).decode()  # receive response
-    # print('Received from server: ' + data)  # show in terminal
-
-    # # message = input(" -> ")  # again take input
-
-    # client_socket.close()  # close the connection
     pass
 
 
